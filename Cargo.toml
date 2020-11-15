@@ -1,7 +1,13 @@
 [package]
 name = "multiformats"
 version = "0.1.0"
+description = "Multiformat specifications in rust-lang"
+repository = "https://github.com/bnclabs/multiformats"
+keywords = ["multiformats", "ipfs"]
 authors = ["prataprc <prataprc@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+documentation = "https://docs.rs/multiformats/"
 edition = "2018"
 
 [dependencies]
