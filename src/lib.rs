@@ -1,5 +1,7 @@
 //! Package implement multiformat specifications.
 
+#![feature(box_syntax, box_patterns)]
+
 use std::{error, fmt, result};
 
 /// Short form to compose Error values.
@@ -48,7 +50,13 @@ macro_rules! err_at {
     }};
 }
 
+#[macro_use]
+extern crate data_encoding_macro;
+
+pub mod multiaddr;
+pub mod multibase;
 pub mod multicodec;
+pub mod multihash;
 
 /// Type alias for Result return type, used by this package.
 pub type Result<T> = result::Result<T, Error>;
