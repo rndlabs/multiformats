@@ -1,4 +1,4 @@
-[![Documentation](https://docs.rs/iprs/badge.svg?style=flat-square)](https://docs.rs/iprs)
+[![Documentation](https://docs.rs/multiformats/badge.svg?style=flat-square)](https://docs.rs/multiformats)
 
 Multiformats
 ============
