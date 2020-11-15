@@ -1,4 +1,4 @@
-//! Module implement Multbase. _Refer [multibase] spec for detail_.
+//! Module implement Multibase. _Refer [multibase] spec for detail_.
 //!
 //! [multibase]: https://github.com/multiformats/multibase
 
