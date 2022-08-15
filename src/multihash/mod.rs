@@ -16,13 +16,12 @@ mod ripemd;
 mod sha1;
 mod sha2;
 mod sha3;
-mod skein;
 
 use std::{fmt, io, result};
 
 use crate::multihash::{
     blake2b::Blake2b, blake2s::Blake2s, blake3::Blake3, identity::Identity, md4::Md4, md5::Md5,
-    ripemd::RipeMd, sha1::Sha1, sha2::Sha2, sha3::Sha3, skein::Skein,
+    ripemd::RipeMd, sha1::Sha1, sha2::Sha2, sha3::Sha3
 };
 
 use crate::{
@@ -50,7 +49,6 @@ enum Inner {
     Blake3(Multicodec, Blake3),
     Md4(Multicodec, Md4),
     Md5(Multicodec, Md5),
-    Skein(Multicodec, Skein),
     RipeMd(Multicodec, RipeMd),
 }
 
@@ -71,7 +69,6 @@ impl fmt::Display for Multihash {
                 Blake3(c, h) => (c.clone(), h.as_digest().ok()?.to_vec()),
                 Md4(c, h) => (c.clone(), h.as_digest().ok()?.to_vec()),
                 Md5(c, h) => (c.clone(), h.as_digest().ok()?.to_vec()),
-                Skein(c, h) => (c.clone(), h.as_digest().ok()?.to_vec()),
                 RipeMd(c, h) => (c.clone(), h.as_digest().ok()?.to_vec()),
                 Binary(data) => get_parts(&Multihash::decode(&data).ok()?.0.inner)?,
             };
@@ -144,10 +141,6 @@ impl Multihash {
                 let hasher = Md5::from_code(code)?;
                 Inner::Md5(codec, hasher)
             }
-            multicodec::SKEIN256_8..=multicodec::SKEIN1024_1024 => {
-                let hasher = Skein::from_code(code)?;
-                Inner::Skein(codec, hasher)
-            }
             multicodec::RIPEMD_128..=multicodec::RIPEMD_320 => {
                 let hasher = RipeMd::from_code(code)?;
                 Inner::RipeMd(codec, hasher)
@@ -207,10 +200,6 @@ impl Multihash {
             multicodec::MD5 => {
                 let hasher = Md5::decode(code, digest)?;
                 Inner::Md5(codec, hasher)
-            }
-            multicodec::SKEIN256_8..=multicodec::SKEIN1024_1024 => {
-                let hasher = Skein::decode(code, digest)?;
-                Inner::Skein(codec, hasher)
             }
             multicodec::RIPEMD_128..=multicodec::RIPEMD_320 => {
                 let hasher = RipeMd::decode(code, digest)?;
@@ -308,7 +297,6 @@ impl Multihash {
             Inner::Blake2s(_, hasher) => hasher.as_digest()?,
             Inner::Md4(_, hasher) => hasher.as_digest()?,
             Inner::Md5(_, hasher) => hasher.as_digest()?,
-            Inner::Skein(_, hasher) => hasher.as_digest()?,
             Inner::RipeMd(_, hasher) => hasher.as_digest()?,
         };
         let n = {
@@ -354,7 +342,6 @@ impl Multihash {
             Inner::Blake2s(_, hasher) => hasher.write(data)?,
             Inner::Md4(_, hasher) => hasher.write(data)?,
             Inner::Md5(_, hasher) => hasher.write(data)?,
-            Inner::Skein(_, hasher) => hasher.write(data)?,
             Inner::RipeMd(_, hasher) => hasher.write(data)?,
             Inner::Binary(_) => err_at!(Invalid, msg: "mh in binary form")?,
         };
@@ -374,7 +361,6 @@ impl Multihash {
             Inner::Blake2s(_, hasher) => hasher.finish()?,
             Inner::Md4(_, hasher) => hasher.finish()?,
             Inner::Md5(_, hasher) => hasher.finish()?,
-            Inner::Skein(_, hasher) => hasher.finish()?,
             Inner::RipeMd(_, hasher) => hasher.finish()?,
             Inner::Binary(_) => err_at!(Invalid, msg: "mh in binary form")?,
         };
@@ -395,7 +381,6 @@ impl Multihash {
             Inner::Blake2s(_, hasher) => hasher.reset()?,
             Inner::Md4(_, hasher) => hasher.reset()?,
             Inner::Md5(_, hasher) => hasher.reset()?,
-            Inner::Skein(_, hasher) => hasher.reset()?,
             Inner::RipeMd(_, hasher) => hasher.reset()?,
             Inner::Binary(_) => err_at!(Invalid, msg: "mh in binary form")?,
         };
@@ -416,7 +401,6 @@ impl Multihash {
             Inner::Blake2s(codec, _) => Ok(codec.clone()),
             Inner::Md4(codec, _) => Ok(codec.clone()),
             Inner::Md5(codec, _) => Ok(codec.clone()),
-            Inner::Skein(codec, _) => Ok(codec.clone()),
             Inner::RipeMd(codec, _) => Ok(codec.clone()),
             Inner::Binary(data) => Self::decode(data)?.0.to_codec(),
         }
@@ -436,7 +420,6 @@ impl Multihash {
             Inner::Blake2s(_, h) => Ok(h.as_digest()?.to_vec()),
             Inner::Md4(_, h) => Ok(h.as_digest()?.to_vec()),
             Inner::Md5(_, h) => Ok(h.as_digest()?.to_vec()),
-            Inner::Skein(_, h) => Ok(h.as_digest()?.to_vec()),
             Inner::RipeMd(_, h) => Ok(h.as_digest()?.to_vec()),
             Inner::Binary(data) => Self::decode(data)?.0.to_digest(),
         }
@@ -455,7 +438,6 @@ impl Multihash {
             Inner::Blake2s(c, h) => Ok((c.clone(), h.as_digest()?.to_vec())),
             Inner::Md4(c, h) => Ok((c.clone(), h.as_digest()?.to_vec())),
             Inner::Md5(c, h) => Ok((c.clone(), h.as_digest()?.to_vec())),
-            Inner::Skein(c, h) => Ok((c.clone(), h.as_digest()?.to_vec())),
             Inner::RipeMd(c, h) => Ok((c.clone(), h.as_digest()?.to_vec())),
             Inner::Binary(data) => Self::decode(data)?.0.unwrap(),
         }

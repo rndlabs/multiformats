@@ -234,7 +234,7 @@ impl Sha3 {
     }
 
     pub(crate) fn finish(&mut self) -> Result<()> {
-        use digest::ExtendableOutput;
+        use digest::ExtendableOutputReset;
 
         match self {
             Sha3::Sha3_224 {

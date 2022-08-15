@@ -5,11 +5,11 @@ use crate::{multicodec, Error, Result};
 #[derive(Clone)]
 pub(crate) enum RipeMd {
     Algo160 {
-        hasher: ripemd160::Ripemd160,
+        hasher: ripemd::Ripemd160,
         digest: Option<Vec<u8>>,
     },
     Algo320 {
-        hasher: ripemd320::Ripemd320,
+        hasher: ripemd::Ripemd320,
         digest: Option<Vec<u8>>,
     },
 }
@@ -32,11 +32,11 @@ impl RipeMd {
     pub(crate) fn from_code(code: u128) -> Result<RipeMd> {
         let val = match code {
             multicodec::RIPEMD_160 => RipeMd::Algo160 {
-                hasher: ripemd160::Ripemd160::new(),
+                hasher: ripemd::Ripemd160::new(),
                 digest: None,
             },
             multicodec::RIPEMD_320 => RipeMd::Algo320 {
-                hasher: ripemd320::Ripemd320::new(),
+                hasher: ripemd::Ripemd320::new(),
                 digest: None,
             },
             _ => err_at!(Invalid, msg: "unreachable")?,
@@ -48,11 +48,11 @@ impl RipeMd {
         let digest = Some(buf.to_vec());
         let val = match code {
             multicodec::RIPEMD_160 => RipeMd::Algo160 {
-                hasher: ripemd160::Ripemd160::new(),
+                hasher: ripemd::Ripemd160::new(),
                 digest,
             },
             multicodec::RIPEMD_320 => RipeMd::Algo320 {
-                hasher: ripemd320::Ripemd320::new(),
+                hasher: ripemd::Ripemd320::new(),
                 digest,
             },
             _ => err_at!(Invalid, msg: "unreachable")?,

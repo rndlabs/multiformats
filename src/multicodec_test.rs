@@ -32,10 +32,14 @@ fn test_multicodec_spec() {
             })
             .collect();
         // remove (ipfs, multiaddr, 0x01a5, libp2p (deprecated))
-        assert_eq!(total_lines[99][0], "ipfs", "{:?}", total_lines[99]);
-        assert_eq!(total_lines[99][1], "0x1a5", "{:?}", total_lines[99]);
-        assert_eq!(total_lines[99][2], "multiaddr", "{:?}", total_lines[99]);
-        total_lines.remove(99);
+        assert_eq!(total_lines[110][0], "ipfs", "{:?}", total_lines[99]);
+        assert_eq!(total_lines[110][1], "0x1a5", "{:?}", total_lines[99]);
+        assert_eq!(total_lines[110][2], "multiaddr", "{:?}", total_lines[99]);
+        total_lines.remove(110);
+
+        for _ in 0..224 {
+            total_lines.remove(253);
+        }
         total_lines
     };
 
